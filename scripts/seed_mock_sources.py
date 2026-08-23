@@ -1,0 +1,315 @@
+"""
+seed_mock_sources.py
+
+Generates repeatable mock retail source data for RetailLake, matching the
+five source systems in docs/source_systems.md. Uses a fixed random seed so
+re-running produces identical output (required by the project brief).
+
+Deliberately injects the bad-data patterns the brief requires:
+  - missing values
+  - duplicate records
+  - invalid prices / quantities
+  - mixed timestamp formats
+  - invalid email format
+  - future-dated orders
+
+Usage:
+    python scripts/seed_mock_sources.py
+    python scripts/seed_mock_sources.py --seed 42 --out-dir data/sample
+
+Output lands in <out-dir>/ as CSV/JSON files, one per source. These are the
+files that Week 3 Airflow DAGs land into MinIO raw/ — this script does not
+touch MinIO itself.
+"""
+
+import argparse
+import csv
+import json
+import random
+import uuid
+from datetime import datetime, timedelta
+
+from faker import Faker
+
+MIN_ROWS = {
+    "pos_sales": 5000,
+    "ecommerce_orders": 3000,
+    "customers": 1000,
+    "products": 300,
+    "inventory_snapshots": 500,
+    "supplier_deliveries": 300,
+}
+
+CATEGORIES = ["Grocery", "Electronics", "Apparel", "Home & Garden", "Toys", "Beauty"]
+CHANNELS = ["in_store", "online", "mobile_app"]
+LOYALTY_TIERS = ["bronze", "silver", "gold", "platinum", None]
+PAYMENT_METHODS = ["card", "cash", "mobile_wallet"]
+REGIONS = ["Western", "Central", "Southern", "Northern"]
+
+TIMESTAMP_FORMATS = [
+    "%Y-%m-%dT%H:%M:%S",   # ISO 8601
+    "%m/%d/%Y %H:%M",      # US-style
+    "%d-%m-%Y",            # day-first, date only
+]
+
+# Fixed reference "now" so output is identical regardless of the real
+# wall-clock time the script happens to run at. Using the literal string
+# "now" with faker resolves to actual current time, which drifts by
+# fractions of a second between runs and silently breaks reproducibility.
+ANCHOR_NOW = datetime(2026, 8, 23, 12, 0, 0)
+
+
+def rand_timestamp_str(fake, start_days_ago=365, end_days_ago=0):
+    dt = fake.date_time_between(
+        start_date=ANCHOR_NOW - timedelta(days=start_days_ago),
+        end_date=ANCHOR_NOW - timedelta(days=end_days_ago),
+    )
+    fmt = random.choice(TIMESTAMP_FORMATS)
+    return dt.strftime(fmt)
+
+
+def build_products(fake, n):
+    products = []
+    for i in range(n):
+        pid = f"PROD-{i+1:05d}"
+        category = random.choice(CATEGORIES)
+        cost = round(random.uniform(1, 200), 2)
+        products.append(
+            {
+                "product_id": pid,
+                "sku": f"SKU{i+1:06d}",
+                # index suffix guarantees uniqueness deterministically —
+                # fake.unique.* relies on Python's hash randomization
+                # internally and is NOT reproducible across runs/machines
+                "name": f"{fake.catch_phrase()[:50]} #{i+1}",
+                "category": category,
+                "unit_cost": cost,
+                "unit_price": round(cost * random.uniform(1.2, 2.5), 2),
+            }
+        )
+    return products
+
+
+def build_customers(fake, n):
+    customers = []
+    for i in range(n):
+        cid = f"CUST-{i+1:06d}"
+        email = fake.email()
+        # inject ~3% invalid email formats
+        if random.random() < 0.03:
+            email = email.replace("@", "_at_")
+        customers.append(
+            {
+                "customer_id": cid,
+                "name": fake.name(),
+                "email": email,
+                "phone": fake.phone_number(),
+                "loyalty_tier": random.choice(LOYALTY_TIERS),
+                "created_at": fake.date_between(start_date=ANCHOR_NOW.date() - timedelta(days=3*365), end_date=ANCHOR_NOW.date()).isoformat(),
+            }
+        )
+    # inject ~1% duplicate customer_id rows
+    dupes = random.sample(customers, k=max(1, n // 100))
+    customers.extend(dupes)
+    random.shuffle(customers)
+    return customers
+
+
+def build_stores(fake, n=25):
+    stores = []
+    for i in range(n):
+        stores.append(
+            {
+                "store_id": f"STORE-{i+1:03d}",
+                "region": random.choice(REGIONS),
+                "channel": "in_store",
+            }
+        )
+    return stores
+
+
+def build_pos_sales(fake, n, products, customers, stores):
+    rows = []
+    txn_ids = []
+    for i in range(n):
+        txn_id = f"TXN-{i+1:07d}"
+        txn_ids.append(txn_id)
+        product = random.choice(products)
+        customer = random.choice(customers)
+        store = random.choice(stores)
+        qty = random.randint(1, 5)
+        price = product["unit_price"]
+
+        # inject ~2% negative/zero qty or price
+        if random.random() < 0.02:
+            qty = random.choice([-1, 0, -3])
+        if random.random() < 0.02:
+            price = round(-abs(price), 2)
+
+        rows.append(
+            {
+                "transaction_id": txn_id,
+                "store_id": store["store_id"],
+                "product_id": product["product_id"],
+                "customer_id": customer["customer_id"],
+                "quantity": qty,
+                "unit_price": price,
+                "timestamp": rand_timestamp_str(fake),
+                "payment_method": random.choice(PAYMENT_METHODS),
+            }
+        )
+
+    # inject ~1% duplicate transaction_id rows (exact duplicates)
+    dupes = random.sample(rows, k=max(1, n // 100))
+    rows.extend(dupes)
+    random.shuffle(rows)
+    return rows
+
+
+def build_ecommerce_orders(fake, n, products, customers):
+    orders = []
+    for i in range(n):
+        order_id = f"ORD-{i+1:07d}"
+        customer_id = random.choice(customers)["customer_id"]
+
+        # inject ~2% missing customer_id
+        if random.random() < 0.02:
+            customer_id = None
+
+        # inject ~1% future-dated orders
+        if random.random() < 0.01:
+            order_dt = ANCHOR_NOW + timedelta(days=random.randint(1, 30))
+        else:
+            order_dt = fake.date_time_between(start_date=ANCHOR_NOW - timedelta(days=365), end_date=ANCHOR_NOW)
+
+        n_items = random.randint(1, 4)
+        items = []
+        for _ in range(n_items):
+            product = random.choice(products)
+            items.append(
+                {
+                    "product_id": product["product_id"],
+                    "quantity": random.randint(1, 3),
+                    "unit_price": product["unit_price"],
+                }
+            )
+
+        orders.append(
+            {
+                "order_id": order_id,
+                "customer_id": customer_id,
+                "items": items,
+                "order_timestamp": order_dt.strftime(random.choice(TIMESTAMP_FORMATS)),
+                "channel": random.choice(["online", "mobile_app"]),
+                "status": random.choice(["placed", "shipped", "delivered", "cancelled"]),
+            }
+        )
+    return orders
+
+
+def build_inventory_snapshots(fake, n, products, stores):
+    rows = []
+    for i in range(n):
+        product = random.choice(products)
+        store = random.choice(stores)
+        qty_on_hand = random.randint(0, 500)
+
+        # inject ~2% missing quantity_on_hand
+        if random.random() < 0.02:
+            qty_on_hand = None
+
+        rows.append(
+            {
+                "snapshot_date": fake.date_between(start_date=ANCHOR_NOW.date() - timedelta(days=90), end_date=ANCHOR_NOW.date()).isoformat(),
+                "product_id": product["product_id"],
+                "warehouse_id": store["store_id"],
+                "quantity_on_hand": qty_on_hand,
+                "reorder_point": random.randint(10, 50),
+            }
+        )
+    # inject ~1% duplicate snapshot rows
+    dupes = random.sample(rows, k=max(1, n // 100))
+    rows.extend(dupes)
+    random.shuffle(rows)
+    return rows
+
+
+def build_supplier_deliveries(fake, n, products):
+    rows = []
+    for i in range(n):
+        product = random.choice(products)
+        ordered_dt = fake.date_between(start_date=ANCHOR_NOW.date() - timedelta(days=180), end_date=ANCHOR_NOW.date() - timedelta(days=7))
+        delivered_dt = ordered_dt + timedelta(days=random.randint(1, 21))
+        ordered_qty = random.randint(50, 1000)
+        delivered_qty = ordered_qty - random.randint(0, 50)
+        rows.append(
+            {
+                "po_id": f"PO-{i+1:06d}",
+                "supplier_id": f"SUP-{random.randint(1, 40):03d}",
+                "product_id": product["product_id"],
+                "ordered_qty": ordered_qty,
+                "delivered_qty": delivered_qty,
+                "ordered_date": ordered_dt.isoformat(),
+                "delivered_date": delivered_dt.isoformat(),
+            }
+        )
+    return rows
+
+
+def write_csv(path, rows, fieldnames):
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def write_json(path, rows):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(rows, f, indent=2, default=str)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--out-dir", type=str, default="data/sample")
+    args = parser.parse_args()
+
+    random.seed(args.seed)
+    fake = Faker()
+    Faker.seed(args.seed)
+
+    import os
+    os.makedirs(args.out_dir, exist_ok=True)
+
+    products = build_products(fake, MIN_ROWS["products"])
+    customers = build_customers(fake, MIN_ROWS["customers"])
+    stores = build_stores(fake)
+
+    pos_sales = build_pos_sales(fake, MIN_ROWS["pos_sales"], products, customers, stores)
+    ecommerce_orders = build_ecommerce_orders(fake, MIN_ROWS["ecommerce_orders"], products, customers)
+    inventory = build_inventory_snapshots(fake, MIN_ROWS["inventory_snapshots"], products, stores)
+    supplier_deliveries = build_supplier_deliveries(fake, MIN_ROWS["supplier_deliveries"], products)
+
+    write_csv(f"{args.out_dir}/products.csv", products, list(products[0].keys()))
+    write_csv(f"{args.out_dir}/customers.csv", customers, list(customers[0].keys()))
+    write_csv(f"{args.out_dir}/pos_sales.csv", pos_sales, list(pos_sales[0].keys()))
+    write_csv(
+        f"{args.out_dir}/inventory_snapshots.csv",
+        inventory,
+        list(inventory[0].keys()),
+    )
+    write_json(f"{args.out_dir}/ecommerce_orders.json", ecommerce_orders)
+    write_json(f"{args.out_dir}/supplier_deliveries.json", supplier_deliveries)
+
+    print("Generated mock source data:")
+    print(f"  products.csv              {len(products)} rows")
+    print(f"  customers.csv             {len(customers)} rows (incl. duplicates)")
+    print(f"  pos_sales.csv             {len(pos_sales)} rows (incl. duplicates/bad values)")
+    print(f"  ecommerce_orders.json     {len(ecommerce_orders)} rows")
+    print(f"  inventory_snapshots.csv   {len(inventory)} rows (incl. duplicates/nulls)")
+    print(f"  supplier_deliveries.json  {len(supplier_deliveries)} rows")
+    print(f"Output directory: {args.out_dir}")
+
+
+if __name__ == "__main__":
+    main()
