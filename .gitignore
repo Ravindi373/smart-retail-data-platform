@@ -1,0 +1,7 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+logs/
+*.log
+docker/volumes/
