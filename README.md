@@ -1,1 +1,1 @@
-# -smart-retail-data-platform
+# smart-retail-data-platform
