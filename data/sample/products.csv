@@ -1,0 +1,301 @@
+product_id,sku,name,category,unit_cost,unit_price
+PROD-00001,SKU000001,Sharable bifurcated algorithm #1,Beauty,23.15,50.1
+PROD-00002,SKU000002,User-centric even-keeled encryption #2,Electronics,45.42,97.99
+PROD-00003,SKU000003,Face-to-face client-driven support #3,Beauty,148.39,283.27
+PROD-00004,SKU000004,Customer-focused systematic support #4,Toys,84.96,105.24
+PROD-00005,SKU000005,Quality-focused background parallelism #5,Electronics,47.3,93.78
+PROD-00006,SKU000006,Optimized 5thgeneration algorithm #6,Toys,40.57,82.96
+PROD-00007,SKU000007,Cross-group didactic emulation #7,Toys,84.48,150.71
+PROD-00008,SKU000008,Profit-focused real-time algorithm #8,Apparel,162.08,195.87
+PROD-00009,SKU000009,Realigned dedicated structure #9,Electronics,139.93,229.81
+PROD-00010,SKU000010,Streamlined tangible moratorium #10,Electronics,43.85,96.14
+PROD-00011,SKU000011,Operative directional knowledge user #11,Grocery,19.46,25.8
+PROD-00012,SKU000012,Reverse-engineered even-keeled workforce #12,Apparel,121.14,272.48
+PROD-00013,SKU000013,Adaptive well-modulated workforce #13,Beauty,92.43,125.91
+PROD-00014,SKU000014,Diverse tangible interface #14,Home & Garden,16.68,26.37
+PROD-00015,SKU000015,Mandatory even-keeled collaboration #15,Beauty,124.09,287.92
+PROD-00016,SKU000016,Extended well-modulated Graphical User Interface #16,Toys,39.27,50.67
+PROD-00017,SKU000017,Customer-focused background implementation #17,Beauty,46.35,73.06
+PROD-00018,SKU000018,Cross-platform heuristic hardware #18,Grocery,171.21,398.31
+PROD-00019,SKU000019,Robust empowering workforce #19,Home & Garden,56.32,114.13
+PROD-00020,SKU000020,Balanced upward-trending knowledgebase #20,Apparel,33.37,55.46
+PROD-00021,SKU000021,Public-key bottom-line implementation #21,Beauty,54.13,130.87
+PROD-00022,SKU000022,Configurable neutral frame #22,Beauty,15.21,30.81
+PROD-00023,SKU000023,Self-enabling regional hierarchy #23,Toys,146.1,206.36
+PROD-00024,SKU000024,Re-engineered content-based strategy #24,Home & Garden,54.72,131.49
+PROD-00025,SKU000025,Cloned 6thgeneration protocol #25,Beauty,111.83,233.72
+PROD-00026,SKU000026,Focused zero administration frame #26,Grocery,46.58,57.84
+PROD-00027,SKU000027,Configurable discrete attitude #27,Apparel,80.83,103.95
+PROD-00028,SKU000028,Multi-tiered even-keeled knowledgebase #28,Toys,175.4,282.23
+PROD-00029,SKU000029,Sharable high-level complexity #29,Beauty,100.35,235.83
+PROD-00030,SKU000030,Multi-layered heuristic database #30,Beauty,92.31,142.56
+PROD-00031,SKU000031,Synchronized encompassing standardization #31,Electronics,149.25,283.68
+PROD-00032,SKU000032,Synergized secondary archive #32,Beauty,117.33,277.74
+PROD-00033,SKU000033,Robust scalable concept #33,Home & Garden,73.04,182.35
+PROD-00034,SKU000034,Public-key upward-trending encryption #34,Electronics,102.4,134.98
+PROD-00035,SKU000035,Diverse maximized implementation #35,Grocery,172.36,241.08
+PROD-00036,SKU000036,Future-proofed scalable solution #36,Electronics,158.62,277.4
+PROD-00037,SKU000037,Realigned directional software #37,Grocery,77.57,153.17
+PROD-00038,SKU000038,Inverse zero administration time-frame #38,Home & Garden,106.29,261.73
+PROD-00039,SKU000039,Centralized discrete alliance #39,Grocery,136.38,183.97
+PROD-00040,SKU000040,Intuitive impactful flexibility #40,Toys,150.42,330.8
+PROD-00041,SKU000041,Cloned didactic open system #41,Apparel,23.2,40.95
+PROD-00042,SKU000042,Universal foreground data-warehouse #42,Home & Garden,1.65,3.53
+PROD-00043,SKU000043,Streamlined modular infrastructure #43,Beauty,53.41,98.85
+PROD-00044,SKU000044,Stand-alone logistical circuit #44,Electronics,102.03,136.55
+PROD-00045,SKU000045,Fundamental client-driven encryption #45,Beauty,60.39,122.63
+PROD-00046,SKU000046,User-friendly next generation monitoring #46,Toys,40.58,68.42
+PROD-00047,SKU000047,Fundamental value-added paradigm #47,Electronics,108.34,239.67
+PROD-00048,SKU000048,Optimized optimal initiative #48,Toys,183.78,363.63
+PROD-00049,SKU000049,Multi-lateral directional challenge #49,Home & Garden,4.88,11.75
+PROD-00050,SKU000050,Profound modular array #50,Apparel,48.65,73.61
+PROD-00051,SKU000051,Versatile actuating budgetary management #51,Toys,189.44,248.42
+PROD-00052,SKU000052,Distributed responsive complexity #52,Home & Garden,163.39,403.8
+PROD-00053,SKU000053,Synergized interactive policy #53,Toys,153.4,209.68
+PROD-00054,SKU000054,Cloned human-resource implementation #54,Home & Garden,189.42,267.97
+PROD-00055,SKU000055,Right-sized maximized moderator #55,Toys,174.61,305.58
+PROD-00056,SKU000056,Function-based neutral access #56,Electronics,185.85,405.5
+PROD-00057,SKU000057,Synergized uniform budgetary management #57,Beauty,41.03,65.86
+PROD-00058,SKU000058,Synergized national system engine #58,Beauty,130.33,230.62
+PROD-00059,SKU000059,Future-proofed zero administration project #59,Toys,90.85,138.3
+PROD-00060,SKU000060,Mandatory bifurcated frame #60,Grocery,68.28,134.16
+PROD-00061,SKU000061,Optional cohesive knowledgebase #61,Electronics,118.1,142.82
+PROD-00062,SKU000062,Adaptive uniform success #62,Beauty,126.59,189.58
+PROD-00063,SKU000063,Fundamental motivating task-force #63,Grocery,172.07,222.33
+PROD-00064,SKU000064,Enhanced motivating benchmark #64,Electronics,56.42,103.31
+PROD-00065,SKU000065,Self-enabling exuding productivity #65,Toys,27.33,66.03
+PROD-00066,SKU000066,Profit-focused real-time customer loyalty #66,Toys,115.67,175.34
+PROD-00067,SKU000067,Distributed holistic task-force #67,Home & Garden,161.69,234.05
+PROD-00068,SKU000068,Diverse needs-based time-frame #68,Grocery,132.14,219.43
+PROD-00069,SKU000069,Progressive 24hour policy #69,Home & Garden,93.94,201.76
+PROD-00070,SKU000070,Inverse mobile adapter #70,Beauty,131.04,267.33
+PROD-00071,SKU000071,Customizable high-level workforce #71,Grocery,81.12,133.13
+PROD-00072,SKU000072,Integrated disintermediate approach #72,Grocery,50.48,73.06
+PROD-00073,SKU000073,Front-line non-volatile artificial intelligence #73,Home & Garden,28.9,41.57
+PROD-00074,SKU000074,Configurable upward-trending matrix #74,Home & Garden,50.71,121.72
+PROD-00075,SKU000075,Cloned well-modulated monitoring #75,Home & Garden,161.8,374.2
+PROD-00076,SKU000076,Visionary clear-thinking capacity #76,Grocery,11.07,27.66
+PROD-00077,SKU000077,Switchable methodical neural-net #77,Grocery,193.83,466.02
+PROD-00078,SKU000078,Down-sized empowering moderator #78,Electronics,34.1,62.45
+PROD-00079,SKU000079,Robust interactive data-warehouse #79,Electronics,173.07,410.73
+PROD-00080,SKU000080,Quality-focused web-enabled superstructure #80,Electronics,76.42,189.59
+PROD-00081,SKU000081,Team-oriented dedicated structure #81,Apparel,185.38,411.67
+PROD-00082,SKU000082,Integrated impactful secured line #82,Apparel,85.18,208.22
+PROD-00083,SKU000083,Streamlined holistic intranet #83,Toys,132.71,243.21
+PROD-00084,SKU000084,Programmable local capability #84,Electronics,60.04,147.66
+PROD-00085,SKU000085,Fully-configurable directional architecture #85,Toys,147.41,188.57
+PROD-00086,SKU000086,Mandatory 3rdgeneration parallelism #86,Apparel,12.38,24.26
+PROD-00087,SKU000087,Reactive discrete parallelism #87,Toys,183.96,347.77
+PROD-00088,SKU000088,Face-to-face 24hour archive #88,Grocery,192.2,250.66
+PROD-00089,SKU000089,Triple-buffered responsive approach #89,Electronics,14.64,18.86
+PROD-00090,SKU000090,Focused asymmetric alliance #90,Electronics,81.35,197.2
+PROD-00091,SKU000091,Managed asynchronous migration #91,Toys,50.0,98.64
+PROD-00092,SKU000092,Front-line even-keeled secured line #92,Toys,17.31,35.56
+PROD-00093,SKU000093,Pre-emptive didactic moratorium #93,Toys,105.03,253.66
+PROD-00094,SKU000094,De-engineered uniform orchestration #94,Electronics,134.28,215.98
+PROD-00095,SKU000095,Re-engineered methodical encryption #95,Apparel,79.76,165.36
+PROD-00096,SKU000096,Phased incremental core #96,Apparel,91.99,221.49
+PROD-00097,SKU000097,Cross-platform bandwidth-monitored protocol #97,Grocery,2.85,5.72
+PROD-00098,SKU000098,Optional heuristic interface #98,Toys,199.22,258.04
+PROD-00099,SKU000099,Open-source maximized superstructure #99,Electronics,101.67,139.51
+PROD-00100,SKU000100,Business-focused systematic projection #100,Apparel,176.29,413.06
+PROD-00101,SKU000101,Stand-alone bandwidth-monitored approach #101,Apparel,57.71,102.13
+PROD-00102,SKU000102,Open-architected upward-trending Graphical User In #102,Toys,141.0,281.32
+PROD-00103,SKU000103,Customer-focused dynamic core #103,Beauty,106.26,219.77
+PROD-00104,SKU000104,Ergonomic national knowledge user #104,Toys,60.58,124.94
+PROD-00105,SKU000105,Devolved interactive contingency #105,Electronics,53.63,126.39
+PROD-00106,SKU000106,Grass-roots maximized encryption #106,Beauty,111.09,172.64
+PROD-00107,SKU000107,Compatible leadingedge workforce #107,Toys,42.92,70.64
+PROD-00108,SKU000108,Reactive bandwidth-monitored application #108,Beauty,127.21,196.31
+PROD-00109,SKU000109,Streamlined needs-based access #109,Home & Garden,50.97,121.34
+PROD-00110,SKU000110,Cross-group web-enabled encoding #110,Grocery,19.37,33.91
+PROD-00111,SKU000111,Down-sized incremental matrix #111,Apparel,9.77,15.96
+PROD-00112,SKU000112,Polarized didactic initiative #112,Electronics,127.79,196.87
+PROD-00113,SKU000113,Centralized composite implementation #113,Beauty,88.93,188.3
+PROD-00114,SKU000114,Adaptive human-resource firmware #114,Toys,2.92,3.79
+PROD-00115,SKU000115,Persevering executive interface #115,Beauty,180.88,345.35
+PROD-00116,SKU000116,Total upward-trending toolset #116,Apparel,116.92,162.81
+PROD-00117,SKU000117,Realigned stable structure #117,Electronics,9.32,15.6
+PROD-00118,SKU000118,Pre-emptive coherent core #118,Grocery,179.89,265.0
+PROD-00119,SKU000119,Implemented didactic approach #119,Electronics,133.72,221.95
+PROD-00120,SKU000120,Reduced user-facing moratorium #120,Toys,176.94,305.8
+PROD-00121,SKU000121,Centralized value-added functionalities #121,Toys,150.15,360.88
+PROD-00122,SKU000122,Centralized actuating paradigm #122,Electronics,173.06,427.3
+PROD-00123,SKU000123,Polarized motivating moderator #123,Electronics,176.4,217.36
+PROD-00124,SKU000124,Diverse analyzing migration #124,Beauty,184.97,410.1
+PROD-00125,SKU000125,Configurable contextually-based architecture #125,Home & Garden,160.64,373.21
+PROD-00126,SKU000126,Right-sized asymmetric service-desk #126,Electronics,54.09,120.27
+PROD-00127,SKU000127,Front-line impactful capability #127,Grocery,77.13,96.44
+PROD-00128,SKU000128,Re-contextualized dynamic paradigm #128,Home & Garden,45.26,102.36
+PROD-00129,SKU000129,Right-sized 6thgeneration process improvement #129,Home & Garden,70.58,159.98
+PROD-00130,SKU000130,Configurable intangible protocol #130,Electronics,45.36,93.35
+PROD-00131,SKU000131,Reduced non-volatile model #131,Home & Garden,66.32,154.11
+PROD-00132,SKU000132,Intuitive empowering database #132,Apparel,70.88,131.99
+PROD-00133,SKU000133,Synchronized transitional functionalities #133,Beauty,196.25,372.3
+PROD-00134,SKU000134,Front-line empowering infrastructure #134,Grocery,23.95,58.95
+PROD-00135,SKU000135,De-engineered static project #135,Electronics,116.54,288.86
+PROD-00136,SKU000136,Innovative logistical functionalities #136,Grocery,22.57,39.83
+PROD-00137,SKU000137,Versatile asynchronous access #137,Beauty,157.5,278.35
+PROD-00138,SKU000138,Persevering regional open system #138,Toys,24.01,56.89
+PROD-00139,SKU000139,Cross-platform asynchronous monitoring #139,Electronics,51.69,109.66
+PROD-00140,SKU000140,Extended motivating firmware #140,Grocery,104.46,234.87
+PROD-00141,SKU000141,De-engineered grid-enabled architecture #141,Beauty,144.17,312.06
+PROD-00142,SKU000142,Fully-configurable holistic forecast #142,Beauty,40.21,70.8
+PROD-00143,SKU000143,Diverse leadingedge moratorium #143,Beauty,184.23,370.32
+PROD-00144,SKU000144,Triple-buffered exuding pricing structure #144,Beauty,169.76,362.55
+PROD-00145,SKU000145,Streamlined multi-tasking access #145,Apparel,101.92,210.66
+PROD-00146,SKU000146,Synchronized neutral framework #146,Apparel,81.08,128.46
+PROD-00147,SKU000147,Switchable bi-directional challenge #147,Electronics,39.18,80.88
+PROD-00148,SKU000148,Fundamental bifurcated benchmark #148,Home & Garden,135.79,322.32
+PROD-00149,SKU000149,User-friendly neutral collaboration #149,Toys,114.25,197.41
+PROD-00150,SKU000150,Future-proofed executive portal #150,Grocery,61.47,90.56
+PROD-00151,SKU000151,Expanded transitional Graphical User Interface #151,Toys,121.73,197.07
+PROD-00152,SKU000152,Expanded systemic productivity #152,Home & Garden,88.99,131.51
+PROD-00153,SKU000153,Fundamental motivating matrix #153,Home & Garden,158.95,389.07
+PROD-00154,SKU000154,Function-based actuating array #154,Beauty,34.77,45.56
+PROD-00155,SKU000155,Sharable interactive focus group #155,Toys,133.11,266.89
+PROD-00156,SKU000156,Balanced 24hour groupware #156,Grocery,163.87,356.66
+PROD-00157,SKU000157,Visionary clear-thinking productivity #157,Beauty,62.77,141.14
+PROD-00158,SKU000158,Fundamental cohesive support #158,Electronics,5.86,8.9
+PROD-00159,SKU000159,Organic neutral strategy #159,Home & Garden,122.64,269.69
+PROD-00160,SKU000160,Optimized next generation access #160,Home & Garden,83.47,168.5
+PROD-00161,SKU000161,Customizable asynchronous solution #161,Electronics,143.95,244.6
+PROD-00162,SKU000162,Distributed needs-based alliance #162,Home & Garden,49.55,101.72
+PROD-00163,SKU000163,Multi-layered optimal neural-net #163,Grocery,178.64,414.19
+PROD-00164,SKU000164,Digitized intermediate capacity #164,Grocery,155.91,231.45
+PROD-00165,SKU000165,Balanced fault-tolerant hierarchy #165,Beauty,104.07,131.68
+PROD-00166,SKU000166,Balanced heuristic database #166,Electronics,183.58,249.26
+PROD-00167,SKU000167,Synergized dynamic secured line #167,Electronics,160.48,331.85
+PROD-00168,SKU000168,Customer-focused heuristic time-frame #168,Toys,119.5,290.99
+PROD-00169,SKU000169,Realigned incremental process improvement #169,Home & Garden,122.92,262.44
+PROD-00170,SKU000170,User-friendly coherent encoding #170,Toys,85.92,204.4
+PROD-00171,SKU000171,Diverse context-sensitive installation #171,Home & Garden,179.54,389.02
+PROD-00172,SKU000172,Assimilated context-sensitive support #172,Home & Garden,90.56,197.18
+PROD-00173,SKU000173,Managed zero tolerance installation #173,Beauty,56.18,124.21
+PROD-00174,SKU000174,Synchronized user-facing workforce #174,Home & Garden,125.72,195.74
+PROD-00175,SKU000175,Fully-configurable encompassing complexity #175,Grocery,143.0,215.19
+PROD-00176,SKU000176,Total bi-directional implementation #176,Apparel,64.62,122.92
+PROD-00177,SKU000177,Automated methodical definition #177,Electronics,31.02,52.67
+PROD-00178,SKU000178,Exclusive logistical hardware #178,Electronics,141.58,181.72
+PROD-00179,SKU000179,Integrated discrete definition #179,Home & Garden,66.85,120.71
+PROD-00180,SKU000180,Assimilated stable core #180,Grocery,42.16,73.62
+PROD-00181,SKU000181,Open-architected full-range focus group #181,Toys,189.27,231.93
+PROD-00182,SKU000182,Cloned zero administration focus group #182,Toys,76.7,92.63
+PROD-00183,SKU000183,Monitored secondary migration #183,Apparel,60.42,103.14
+PROD-00184,SKU000184,Open-architected systematic monitoring #184,Home & Garden,108.11,232.98
+PROD-00185,SKU000185,Managed 4thgeneration budgetary management #185,Toys,179.66,329.62
+PROD-00186,SKU000186,Fundamental context-sensitive paradigm #186,Apparel,87.73,108.59
+PROD-00187,SKU000187,Fundamental 5thgeneration benchmark #187,Apparel,134.11,300.08
+PROD-00188,SKU000188,Right-sized intermediate hardware #188,Beauty,33.84,61.17
+PROD-00189,SKU000189,Upgradable zero tolerance functionalities #189,Electronics,196.16,371.6
+PROD-00190,SKU000190,Optional real-time migration #190,Home & Garden,118.79,244.93
+PROD-00191,SKU000191,Customizable human-resource orchestration #191,Grocery,128.91,177.43
+PROD-00192,SKU000192,Ergonomic eco-centric analyzer #192,Home & Garden,37.16,57.16
+PROD-00193,SKU000193,Triple-buffered intermediate ability #193,Apparel,43.12,70.07
+PROD-00194,SKU000194,Programmable national software #194,Home & Garden,56.37,137.35
+PROD-00195,SKU000195,Up-sized user-facing support #195,Home & Garden,51.2,66.89
+PROD-00196,SKU000196,Synchronized dedicated hierarchy #196,Grocery,150.06,190.23
+PROD-00197,SKU000197,Optional asymmetric secured line #197,Apparel,45.62,58.81
+PROD-00198,SKU000198,Managed regional functionalities #198,Beauty,9.01,11.18
+PROD-00199,SKU000199,Switchable bottom-line success #199,Electronics,40.67,49.88
+PROD-00200,SKU000200,Innovative motivating function #200,Electronics,48.47,88.0
+PROD-00201,SKU000201,Synchronized incremental Graphic Interface #201,Grocery,113.23,167.96
+PROD-00202,SKU000202,Open-architected tangible frame #202,Beauty,51.99,87.32
+PROD-00203,SKU000203,Reactive clear-thinking core #203,Toys,121.84,264.67
+PROD-00204,SKU000204,Operative static implementation #204,Grocery,155.78,220.1
+PROD-00205,SKU000205,Synergistic value-added conglomeration #205,Apparel,22.51,27.76
+PROD-00206,SKU000206,Seamless non-volatile framework #206,Apparel,115.58,275.13
+PROD-00207,SKU000207,Open-architected neutral ability #207,Home & Garden,79.93,170.21
+PROD-00208,SKU000208,Innovative executive database #208,Grocery,118.83,270.9
+PROD-00209,SKU000209,Optional zero tolerance paradigm #209,Electronics,21.28,46.91
+PROD-00210,SKU000210,Robust solution-oriented Graphic Interface #210,Beauty,120.48,163.54
+PROD-00211,SKU000211,Persistent leadingedge intranet #211,Toys,156.74,258.83
+PROD-00212,SKU000212,Synergistic didactic migration #212,Home & Garden,132.64,171.06
+PROD-00213,SKU000213,Phased user-facing concept #213,Beauty,68.91,158.8
+PROD-00214,SKU000214,Switchable attitude-oriented forecast #214,Home & Garden,22.0,53.88
+PROD-00215,SKU000215,Profound stable productivity #215,Beauty,178.42,320.74
+PROD-00216,SKU000216,Secured full-range array #216,Electronics,87.66,188.81
+PROD-00217,SKU000217,Versatile disintermediate service-desk #217,Beauty,54.75,123.22
+PROD-00218,SKU000218,Integrated directional workforce #218,Toys,155.15,279.94
+PROD-00219,SKU000219,Exclusive client-server algorithm #219,Beauty,118.9,192.5
+PROD-00220,SKU000220,Balanced dynamic leverage #220,Electronics,166.32,218.32
+PROD-00221,SKU000221,Seamless zero administration archive #221,Home & Garden,49.53,89.36
+PROD-00222,SKU000222,Persevering intangible product #222,Toys,133.97,219.35
+PROD-00223,SKU000223,Re-engineered content-based structure #223,Home & Garden,170.34,244.67
+PROD-00224,SKU000224,Total human-resource methodology #224,Electronics,71.61,109.98
+PROD-00225,SKU000225,Open-architected dynamic circuit #225,Apparel,176.18,372.01
+PROD-00226,SKU000226,Streamlined system-worthy ability #226,Apparel,111.6,208.87
+PROD-00227,SKU000227,Versatile zero administration benchmark #227,Electronics,18.04,38.54
+PROD-00228,SKU000228,Vision-oriented interactive definition #228,Home & Garden,111.48,168.6
+PROD-00229,SKU000229,Enhanced tangible model #229,Home & Garden,129.53,238.08
+PROD-00230,SKU000230,Persistent actuating open architecture #230,Grocery,19.52,29.05
+PROD-00231,SKU000231,Fully-configurable bottom-line knowledgebase #231,Beauty,49.42,101.96
+PROD-00232,SKU000232,Devolved maximized secured line #232,Apparel,95.18,179.91
+PROD-00233,SKU000233,Progressive next generation policy #233,Home & Garden,199.33,381.82
+PROD-00234,SKU000234,Intuitive web-enabled intranet #234,Apparel,140.87,218.66
+PROD-00235,SKU000235,Seamless uniform middleware #235,Apparel,46.88,100.21
+PROD-00236,SKU000236,Optimized neutral knowledge user #236,Apparel,24.79,47.02
+PROD-00237,SKU000237,Diverse value-added leverage #237,Beauty,37.84,56.05
+PROD-00238,SKU000238,Organized empowering system engine #238,Home & Garden,56.02,110.16
+PROD-00239,SKU000239,Fully-configurable scalable focus group #239,Toys,119.76,296.37
+PROD-00240,SKU000240,Visionary zero-defect model #240,Electronics,59.95,100.07
+PROD-00241,SKU000241,Pre-emptive responsive encoding #241,Apparel,3.82,7.24
+PROD-00242,SKU000242,Grass-roots leadingedge archive #242,Apparel,10.06,12.79
+PROD-00243,SKU000243,Universal executive encoding #243,Apparel,139.79,190.7
+PROD-00244,SKU000244,Future-proofed full-range functionalities #244,Home & Garden,21.41,26.03
+PROD-00245,SKU000245,Quality-focused attitude-oriented challenge #245,Apparel,94.41,167.35
+PROD-00246,SKU000246,Distributed discrete info-mediaries #246,Electronics,193.13,295.15
+PROD-00247,SKU000247,Team-oriented coherent strategy #247,Home & Garden,23.7,30.45
+PROD-00248,SKU000248,Extended asymmetric instruction set #248,Home & Garden,15.74,31.77
+PROD-00249,SKU000249,Open-source full-range moratorium #249,Grocery,31.19,70.32
+PROD-00250,SKU000250,Persistent intangible approach #250,Apparel,17.95,27.33
+PROD-00251,SKU000251,Expanded intangible info-mediaries #251,Toys,153.12,304.44
+PROD-00252,SKU000252,Visionary optimal standardization #252,Toys,45.91,86.28
+PROD-00253,SKU000253,Ameliorated well-modulated orchestration #253,Home & Garden,181.79,288.42
+PROD-00254,SKU000254,Multi-tiered mission-critical ability #254,Toys,198.02,316.24
+PROD-00255,SKU000255,Multi-channeled exuding system engine #255,Toys,12.99,31.8
+PROD-00256,SKU000256,Networked intangible monitoring #256,Grocery,189.57,278.69
+PROD-00257,SKU000257,User-friendly user-facing moratorium #257,Electronics,53.66,70.06
+PROD-00258,SKU000258,Robust directional matrix #258,Electronics,35.59,46.18
+PROD-00259,SKU000259,Face-to-face encompassing Internet solution #259,Grocery,82.29,172.49
+PROD-00260,SKU000260,Pre-emptive 4thgeneration info-mediaries #260,Home & Garden,58.96,88.49
+PROD-00261,SKU000261,Mandatory static service-desk #261,Beauty,57.26,132.7
+PROD-00262,SKU000262,Open-architected uniform concept #262,Grocery,137.79,330.85
+PROD-00263,SKU000263,Persistent clear-thinking process improvement #263,Beauty,118.37,265.75
+PROD-00264,SKU000264,Public-key 4thgeneration infrastructure #264,Electronics,85.6,163.32
+PROD-00265,SKU000265,Reverse-engineered non-volatile protocol #265,Beauty,30.65,47.36
+PROD-00266,SKU000266,Assimilated attitude-oriented project #266,Electronics,15.21,21.53
+PROD-00267,SKU000267,Optimized client-driven Local Area Network #267,Apparel,119.41,271.24
+PROD-00268,SKU000268,Enterprise-wide actuating firmware #268,Apparel,88.39,159.92
+PROD-00269,SKU000269,Multi-tiered fresh-thinking data-warehouse #269,Apparel,140.25,340.17
+PROD-00270,SKU000270,Persevering fresh-thinking Graphical User Interfac #270,Toys,108.46,191.88
+PROD-00271,SKU000271,Virtual homogeneous focus group #271,Toys,8.93,15.73
+PROD-00272,SKU000272,Versatile intangible extranet #272,Apparel,121.14,149.44
+PROD-00273,SKU000273,Configurable methodical adapter #273,Electronics,192.42,440.02
+PROD-00274,SKU000274,User-friendly needs-based application #274,Toys,117.84,144.59
+PROD-00275,SKU000275,Monitored directional projection #275,Beauty,164.46,320.55
+PROD-00276,SKU000276,Cloned zero-defect projection #276,Electronics,94.63,193.7
+PROD-00277,SKU000277,Balanced web-enabled algorithm #277,Apparel,37.12,72.79
+PROD-00278,SKU000278,Fully-configurable dedicated adapter #278,Beauty,163.03,401.02
+PROD-00279,SKU000279,Secured coherent encoding #279,Home & Garden,70.24,114.72
+PROD-00280,SKU000280,De-engineered methodical secured line #280,Beauty,21.82,30.75
+PROD-00281,SKU000281,Customizable non-volatile data-warehouse #281,Home & Garden,139.04,218.94
+PROD-00282,SKU000282,Persistent tangible extranet #282,Home & Garden,162.9,311.97
+PROD-00283,SKU000283,Visionary holistic concept #283,Home & Garden,18.52,28.3
+PROD-00284,SKU000284,Robust real-time synergy #284,Grocery,194.07,334.85
+PROD-00285,SKU000285,Universal bifurcated time-frame #285,Toys,165.16,198.44
+PROD-00286,SKU000286,Diverse fault-tolerant benchmark #286,Toys,92.93,118.06
+PROD-00287,SKU000287,Reduced 4thgeneration function #287,Toys,72.99,159.36
+PROD-00288,SKU000288,Re-engineered systematic implementation #288,Beauty,88.97,112.73
+PROD-00289,SKU000289,Object-based transitional customer loyalty #289,Apparel,110.29,265.35
+PROD-00290,SKU000290,Compatible optimizing solution #290,Home & Garden,176.29,322.63
+PROD-00291,SKU000291,Self-enabling dynamic benchmark #291,Grocery,194.66,387.67
+PROD-00292,SKU000292,Total zero administration framework #292,Electronics,142.25,228.17
+PROD-00293,SKU000293,Synergized radical workforce #293,Grocery,110.9,146.52
+PROD-00294,SKU000294,Decentralized non-volatile toolset #294,Grocery,92.83,125.57
+PROD-00295,SKU000295,Balanced grid-enabled monitoring #295,Electronics,100.18,213.54
+PROD-00296,SKU000296,Optimized stable hub #296,Toys,141.38,246.02
+PROD-00297,SKU000297,Cloned motivating project #297,Home & Garden,196.07,297.41
+PROD-00298,SKU000298,Mandatory 24/7 instruction set #298,Toys,29.78,43.12
+PROD-00299,SKU000299,Pre-emptive bi-directional Internet solution #299,Toys,102.14,239.33
+PROD-00300,SKU000300,Multi-lateral scalable knowledgebase #300,Grocery,55.97,124.65
