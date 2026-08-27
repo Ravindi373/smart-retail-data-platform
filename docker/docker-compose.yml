@@ -10,10 +10,14 @@ x-airflow-common: &airflow-common
     MINIO_ENDPOINT: http://minio:9000
     MINIO_ROOT_USER: ${MINIO_ROOT_USER}
     MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    POSTGRES_USER: ${POSTGRES_USER}
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    _PIP_ADDITIONAL_REQUIREMENTS: "boto3"
   volumes:
     - ../dags:/opt/airflow/dags
     - airflow_logs:/opt/airflow/logs
     - ../src:/opt/airflow/src
+    - ../data:/opt/airflow/data
   depends_on:
     postgres:
       condition: service_healthy
