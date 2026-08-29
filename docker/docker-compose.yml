@@ -59,6 +59,25 @@ services:
       timeout: 5s
       retries: 10
 
+  dbt:
+    image: ghcr.io/dbt-labs/dbt-postgres:1.8.latest
+    container_name: retaillake-dbt
+    working_dir: /usr/app/dbt_smart_retail
+    entrypoint: ["tail", "-f", "/dev/null"]
+    ports:
+      - "8081:8081"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: retaildb
+    volumes:
+      - ../dbt_smart_retail:/usr/app/dbt_smart_retail
+      - ./dbt-profiles:/root/.dbt
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   minio-init:
     image: minio/mc
     container_name: retaillake-minio-init

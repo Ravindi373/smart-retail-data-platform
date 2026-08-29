@@ -269,6 +269,22 @@ def _ensure_tables(**_):
     ensure_tables()
 
 
+def _clear_quarantine(**_):
+    """Truncate quality.quarantine at the start of every run so it
+    reflects only the current run's findings, matching the full-refresh
+    semantics already used for silver.* tables. Without this, quarantine
+    grows unbounded across every historical run, including runs against
+    Bronze data that has since been corrected — producing misleading
+    totals (e.g. more quarantined rows than a source table even has)."""
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("TRUNCATE quality.quarantine")
+        conn.commit()
+    finally:
+        conn.close()
+
+
 default_args = {
     "owner": "retaillake",
     "retries": 1,
@@ -289,6 +305,12 @@ with DAG(
     ensure_tables_task = PythonOperator(
         task_id="ensure_bronze_silver_tables",
         python_callable=_ensure_tables,
+    )
+
+    
+    clear_quarantine_task = PythonOperator(
+        task_id="clear_quarantine",
+        python_callable=_clear_quarantine,
     )
 
     clean_pos_sales_task = PythonOperator(
@@ -326,7 +348,7 @@ with DAG(
         ),
     )
 
-    ensure_tables_task >> [
+    ensure_tables_task >> clear_quarantine_task >> [
         clean_pos_sales_task, clean_customers_task, clean_ecommerce_task,
         clean_inventory_task, clean_products_task, clean_suppliers_task,
     ]

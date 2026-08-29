@@ -1,0 +1,37 @@
+version: 2
+
+sources:
+  - name: silver
+    schema: silver
+    description: >
+      Cleaned, deduplicated, PII-hashed tables produced by the
+      retail_silver_clean Airflow DAG (Week 4). Gold models read from
+      these tables, never from bronze or raw.
+    tables:
+      - name: customers
+        description: One row per customer, deduplicated, with PII hashed.
+      - name: products
+        description: One row per product (reference dimension).
+      - name: pos_sales
+        description: One row per in-store sales line item, cleaned.
+      - name: ecommerce_orders
+        description: >
+          One row per online order; the items column is a JSON array of
+          {product_id, quantity, unit_price} line items, unnested in
+          fact_sales_transaction.
+      - name: inventory_snapshots
+        description: One row per product/warehouse/day stock count, cleaned.
+      - name: supplier_deliveries
+        description: One row per purchase order delivery record, cleaned.
+
+  - name: quality
+    schema: quality
+    description: >
+      Data quality tables populated by the retail_silver_clean Airflow
+      DAG. Rows that fail validation or are duplicates land here instead
+      of being silently dropped.
+    tables:
+      - name: quarantine
+        description: >
+          One row per quarantined record, with the source it came from
+          and a human-readable reason it failed validation.

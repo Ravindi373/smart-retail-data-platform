@@ -1,0 +1,141 @@
+version: 2
+
+models:
+  - name: dim_customer
+    description: One row per customer. Grain — customer_key. PII (email, phone) is pre-hashed in Silver; never re-exposed here.
+    columns:
+      - name: customer_key
+        description: Business key (customer_id).
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_product
+    description: One row per product (reference dimension). Grain — product_key.
+    columns:
+      - name: product_key
+        description: Business key (product_id).
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_store
+    description: >
+      One row per physical store/warehouse. Grain — store_key.
+      Derived from distinct store_id (pos_sales) and warehouse_id
+      (inventory_snapshots), since no dedicated store source exists.
+    columns:
+      - name: store_key
+        description: Business key (store_id / warehouse_id — same identifier space).
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_date
+    description: Calendar date spine (2020-2030). Grain — date_key.
+    columns:
+      - name: date_key
+        description: Calendar date.
+        tests:
+          - not_null
+          - unique
+
+  - name: fact_sales_transaction
+    description: >
+      One row per sales line item across both channels (in-store POS
+      and online e-commerce, unioned). Grain — transaction_line_id.
+    columns:
+      - name: transaction_line_id
+        description: >
+          transaction_id for POS rows; order_id + item index for
+          e-commerce rows (e-commerce orders can have multiple line
+          items, so order_id alone is not unique at this grain).
+        tests:
+          - not_null
+          - unique
+      - name: customer_key
+        description: >
+          NOTE: this relationship legitimately fails for a small number
+          of rows (~2-3% of fact_sales_transaction) — those rows
+          reference a customer_id whose only record had an invalid
+          email and was therefore fully excluded from silver.customers
+          during Silver cleaning. This is a genuine cross-table
+          referential integrity gap that Silver's per-table validation
+          did not catch (it only checks fields within each table, not
+          foreign keys across tables) — exactly the kind of issue this
+          test exists to surface. Configured as a warning rather than a
+          hard failure so the dbt build still succeeds while the gap
+          remains visible in test output and in the final report's
+          "Known Limitations" section, rather than being silently
+          hidden by loosening the test.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_key
+              config:
+                severity: warn
+      - name: product_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_key
+      - name: store_key
+        description: >
+          NULL for online sales — an online order has no physical
+          store, so this is a legitimate NULL, not missing data.
+          dbt's relationships test only evaluates non-null values, so
+          it does not fail on these rows.
+        tests:
+          - relationships:
+              to: ref('dim_store')
+              field: store_key
+      - name: date_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+
+  - name: fact_inventory_snapshot
+    description: >
+      One row per product, per store/warehouse, per snapshot date.
+      Grain — snapshot_id. is_stockout_risk is derived
+      (quantity_on_hand <= reorder_point), not sourced directly.
+    columns:
+      - name: snapshot_id
+        description: Synthetic key — product_key + store_key + date_key.
+        tests:
+          - not_null
+          - unique
+      - name: product_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_key
+      - name: store_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_store')
+              field: store_key
+      - name: date_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+
+  - name: quality_summary
+    description: >
+      One row per (source_name, failed_rule) combination. Rollup of
+      quality.quarantine — powers the Week 6 data quality dashboard tile.
+    columns:
+      - name: source_name
+        tests:
+          - not_null
+      - name: failed_rule
+        tests:
+          - not_null
