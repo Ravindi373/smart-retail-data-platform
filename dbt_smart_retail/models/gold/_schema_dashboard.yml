@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: sales_flat
+    description: >
+      Denormalized, dashboard-ready view over fact_sales_transaction and
+      all its dimensions. Grain matches fact_sales_transaction (one row
+      per sales line item). Used as the primary Superset dataset for the
+      daily sales trend, revenue by channel, and top products charts,
+      and provides every required dashboard filter column (date_key,
+      channel, category, store_id/region, loyalty_tier) in one place.
+    columns:
+      - name: transaction_line_id
+        description: Inherited from fact_sales_transaction.
+        tests:
+          - not_null
+
+  - name: inventory_flat
+    description: >
+      Denormalized, dashboard-ready view over fact_inventory_snapshot
+      and its dimensions. Grain matches fact_inventory_snapshot. Used as
+      the Superset dataset for the stockout/low-stock table.
+    columns:
+      - name: snapshot_id
+        description: Inherited from fact_inventory_snapshot.
+        tests:
+          - not_null

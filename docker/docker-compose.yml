@@ -41,6 +41,30 @@ services:
       timeout: 5s
       retries: 10
 
+  superset:
+    image: apache/superset:latest
+    container_name: retaillake-superset
+    user: root
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        uv pip install --python /app/.venv/bin/python3 psycopg2-binary
+        /usr/bin/run-server.sh
+    environment:
+      SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY}
+      SUPERSET_CONFIG_PATH: /app/pythonpath/superset_config.py
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "8088:8088"
+    volumes:
+      - superset_home:/app/superset_home
+      - ./superset-config/superset_config.py:/app/pythonpath/superset_config.py
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   minio:
     image: minio/minio
     container_name: retaillake-minio
@@ -131,3 +155,4 @@ volumes:
   postgres_data:
   minio_data:
   airflow_logs:
+  superset_home:
