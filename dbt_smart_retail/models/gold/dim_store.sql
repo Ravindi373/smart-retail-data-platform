@@ -1,21 +1,24 @@
 -- Grain: one row per physical store/warehouse location.
 --
--- Known limitation: the source data (pos_sales.store_id and
--- inventory_snapshots.warehouse_id) does not carry a region field through
--- to Silver, even though the mock data generator assigns one internally
--- at generation time. region is left NULL here rather than guessed, and
--- is documented as a known gap in the final report rather than silently
--- fabricated.
+-- Built from the store master (silver.stores), which carries the region.
+-- Store ids that appear in the fact sources but are missing from the master
+-- are still included (with a NULL region) so no fact row loses its
+-- dimension row - and the not_null test on region then fails loudly instead
+-- of the gap being hidden.
 
 with store_ids as (
-    select distinct store_id as store_id from {{ source('silver', 'pos_sales') }}
+    select store_id from {{ source('silver', 'stores') }}
     union
-    select distinct warehouse_id as store_id from {{ source('silver', 'inventory_snapshots') }}
+    select store_id from {{ source('silver', 'pos_sales') }}
+    union
+    select warehouse_id as store_id from {{ source('silver', 'inventory_snapshots') }}
 )
 
 select
-    store_id           as store_key,
-    store_id,
-    cast(null as text) as region,
-    'in_store'         as channel
-from store_ids
+    ids.store_id                         as store_key,
+    ids.store_id,
+    st.region,
+    coalesce(st.channel, 'in_store')     as channel
+from store_ids ids
+left join {{ source('silver', 'stores') }} st
+    on st.store_id = ids.store_id

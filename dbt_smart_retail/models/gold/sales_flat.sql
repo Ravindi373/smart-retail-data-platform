@@ -26,7 +26,10 @@ select
     s.store_id,
     s.region,
     c.customer_key,
-    c.loyalty_tier
+    -- NULL here means the sale references a customer missing from dim_customer
+    -- (the documented ~2.8% referential-integrity gap); label it explicitly so
+    -- the loyalty-tier filter shows it as its own value instead of a blank.
+    coalesce(c.loyalty_tier, 'unknown') as loyalty_tier
 from {{ ref('fact_sales_transaction') }} f
 left join {{ ref('dim_date') }}     d on f.date_key    = d.date_key
 left join {{ ref('dim_product') }}  p on f.product_key = p.product_key

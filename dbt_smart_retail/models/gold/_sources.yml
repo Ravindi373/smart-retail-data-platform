@@ -23,6 +23,8 @@ sources:
         description: One row per product/warehouse/day stock count, cleaned.
       - name: supplier_deliveries
         description: One row per purchase order delivery record, cleaned.
+      - name: stores
+        description: One row per store from the store master, with region.
 
   - name: quality
     schema: quality
@@ -35,3 +37,7 @@ sources:
         description: >
           One row per quarantined record, with the source it came from
           and a human-readable reason it failed validation.
+      - name: run_summary
+        description: >
+          One row per source from the latest Silver run: rows in, rows
+          clean, rows quarantined.

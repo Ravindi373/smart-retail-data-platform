@@ -3,6 +3,11 @@
 -- Separate database for Airflow's own metadata, kept apart from app data
 CREATE DATABASE airflow;
 
+-- Superset's own metadata database (dashboards, charts, users). Kept in
+-- Postgres because SQLite locks under Docker/WSL2 (see docs/TROUBLESHOOTING.md).
+-- Referenced by docker/superset-config/superset_config.py
+CREATE DATABASE superset;
+
 -- Application database holding the medallion layers
 CREATE DATABASE retaildb;
 

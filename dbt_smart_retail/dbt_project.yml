@@ -6,6 +6,7 @@ profile: 'smart_retail'
 
 model-paths: ["models"]
 macro-paths: ["macros"]
+test-paths: ["tests"]
 target-path: "target"
 clean-targets: ["target", "dbt_packages"]
 

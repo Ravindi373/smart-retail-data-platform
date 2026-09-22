@@ -1,15 +1,16 @@
 """
 dags/retail_bronze_ingestion.py
 
-Week 3 pipeline: lands each of the five source files (plus the products
-reference file) into MinIO under a date-partitioned raw/ path, then
+Ingestion pipeline: lands each of the five source systems (plus the products
+and stores reference files) into MinIO under a date-partitioned raw/ path, then
 parses each into a typed Bronze Postgres table with ingestion metadata,
 and records one row per source in bronze.ingestion_audit_log.
 
 Idempotency: re-running this DAG for the same logical date does not
-create duplicate raw objects (storage.land_raw_file skips identical
-content) and does not duplicate Bronze rows (existing rows for the same
-_run_date are deleted before the fresh batch is inserted).
+create duplicate raw objects (storage.land_raw_file skips identical content
+and never overwrites changed content) and does not duplicate Bronze rows
+(existing rows for the same _run_date are deleted before the fresh batch is
+inserted). Bronze keeps one load per _run_date; Silver reads only the latest.
 
 Source data: for this local student project there is no live upstream
 system to poll, so this DAG reads the generated mock files directly from
@@ -20,20 +21,29 @@ each system's real API, export, or database connection.
 
 import csv
 import json
+import logging
 import os
 import sys
-from datetime import datetime, timedelta
+import time
+from datetime import datetime, timedelta, timezone
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
-from psycopg2.extras import execute_values, Json
+from psycopg2.extras import Json, execute_values
 
-sys.path.insert(0, "/opt/airflow/src")
-from db.db import get_conn, ensure_tables          # noqa: E402
-from connectors.storage import land_raw_file        # noqa: E402
+sys.path.insert(0, os.environ.get("RETAIL_SRC_DIR", "/opt/airflow/src"))
+from connectors.storage import land_raw_file  # noqa: E402
+from db.db import ensure_tables, get_conn  # noqa: E402
 
-SAMPLE_DIR = "/opt/airflow/data/sample"
+log = logging.getLogger(__name__)
+
+SAMPLE_DIR = os.environ.get("RETAIL_SAMPLE_DIR", "/opt/airflow/data/sample")
+
+
+def _utcnow():
+    """Naive UTC timestamp, matching the TIMESTAMP columns."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 # source_name, filename, bronze table, CSV column names, DB column names
 # (CSV headers and DB columns match 1:1 except pos_sales, whose CSV
@@ -51,6 +61,9 @@ SOURCES = [
     ("customers", "customers.csv", "bronze.customers",
      ["customer_id", "name", "email", "phone", "loyalty_tier", "created_at"],
      ["customer_id", "name", "email", "phone", "loyalty_tier", "created_at"]),
+    ("stores", "stores.csv", "bronze.stores",
+     ["store_id", "region", "channel"],
+     ["store_id", "region", "channel"]),
     ("products", "products.csv", "bronze.products",
      ["product_id", "sku", "name", "category", "unit_cost", "unit_price"],
      ["product_id", "sku", "name", "category", "unit_cost", "unit_price"]),
@@ -81,12 +94,13 @@ def _load_csv_rows(path, columns):
 
 
 def _land_and_parse_csv(source_name, filename, table, columns, db_columns, run_date, **_):
+    started = time.monotonic()
     run_date = datetime.strptime(run_date, "%Y-%m-%d").date()
     local_path = os.path.join(SAMPLE_DIR, filename)
     object_key = land_raw_file(local_path, source_name, run_date)
 
     rows = _load_csv_rows(local_path, columns)
-    now = datetime.utcnow()
+    now = _utcnow()
     full_rows = [r + (filename, now, run_date) for r in rows]
     full_columns = db_columns + ["_source_file", "_ingested_at", "_run_date"]
 
@@ -105,13 +119,19 @@ def _land_and_parse_csv(source_name, filename, table, columns, db_columns, run_d
                 (source_name, object_key, len(rows), run_date),
             )
         conn.commit()
+    except Exception:
+        conn.rollback()
+        log.exception("Bronze load failed; transaction rolled back")
+        raise
     finally:
         conn.close()
 
-    print(f"[{source_name}] landed at {object_key}, {len(rows)} rows -> {table}")
+    log.info("[%s] landed at %s, rows=%d -> %s, duration=%.1fs",
+             source_name, object_key, len(rows), table, time.monotonic() - started)
 
 
 def _land_and_parse_ecommerce(run_date, **_):
+    started = time.monotonic()
     run_date = datetime.strptime(run_date, "%Y-%m-%d").date()
     filename = "ecommerce_orders.json"
     local_path = os.path.join(SAMPLE_DIR, filename)
@@ -120,7 +140,7 @@ def _land_and_parse_ecommerce(run_date, **_):
     with open(local_path, encoding="utf-8") as f:
         orders = json.load(f)
 
-    now = datetime.utcnow()
+    now = _utcnow()
     full_rows = [
         (
             o.get("order_id"),
@@ -157,13 +177,19 @@ def _land_and_parse_ecommerce(run_date, **_):
                 ("ecommerce_orders", object_key, len(orders), run_date),
             )
         conn.commit()
+    except Exception:
+        conn.rollback()
+        log.exception("Bronze load failed; transaction rolled back")
+        raise
     finally:
         conn.close()
 
-    print(f"[ecommerce_orders] landed at {object_key}, {len(orders)} rows -> bronze.ecommerce_orders")
+    log.info("[ecommerce_orders] landed at %s, rows=%d -> bronze.ecommerce_orders, duration=%.1fs",
+             object_key, len(orders), time.monotonic() - started)
 
 
 def _land_and_parse_supplier_deliveries(run_date, **_):
+    started = time.monotonic()
     run_date = datetime.strptime(run_date, "%Y-%m-%d").date()
     filename = "supplier_deliveries.json"
     local_path = os.path.join(SAMPLE_DIR, filename)
@@ -172,7 +198,7 @@ def _land_and_parse_supplier_deliveries(run_date, **_):
     with open(local_path, encoding="utf-8") as f:
         deliveries = json.load(f)
 
-    now = datetime.utcnow()
+    now = _utcnow()
     full_rows = [
         (
             d.get("po_id"),
@@ -210,10 +236,15 @@ def _land_and_parse_supplier_deliveries(run_date, **_):
                 ("supplier_deliveries", object_key, len(deliveries), run_date),
             )
         conn.commit()
+    except Exception:
+        conn.rollback()
+        log.exception("Bronze load failed; transaction rolled back")
+        raise
     finally:
         conn.close()
 
-    print(f"[supplier_deliveries] landed at {object_key}, {len(deliveries)} rows -> bronze.supplier_deliveries")
+    log.info("[supplier_deliveries] landed at %s, rows=%d -> bronze.supplier_deliveries, duration=%.1fs",
+             object_key, len(deliveries), time.monotonic() - started)
 
 
 def _ensure_tables(**_):
@@ -230,7 +261,7 @@ with DAG(
     dag_id="retail_bronze_ingestion",
     description="Land raw retail source files into MinIO and parse into Bronze tables",
     default_args=default_args,
-    schedule_interval="@daily",
+    schedule=None,  # triggered by retail_pipeline (or manually),
     max_active_runs=1,
     start_date=datetime(2026, 1, 1),
     catchup=False,

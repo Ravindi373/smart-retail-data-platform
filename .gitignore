@@ -6,3 +6,10 @@ logs/
 *.log
 docker/volumes/
 dbt_smart_retail/target/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dbt_smart_retail/dbt_packages/
+dbt_smart_retail/logs/
+*.egg-info/
