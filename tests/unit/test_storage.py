@@ -101,3 +101,4 @@ def test_real_errors_are_raised_not_swallowed(s3, tmp_path, monkeypatch):
     f.write_text("x\n", newline="\n")
     with pytest.raises(ClientError):
         storage.land_raw_file(str(f), "x", RUN_DATE)
+
