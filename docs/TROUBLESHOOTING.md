@@ -84,3 +84,8 @@ are problems hit and solved while building this project.
 **`ruff` fails** -> run `make lint` locally and fix what it prints.
 **`e2e` fails** -> open the run, then *Summary -> Artifacts -> pipeline-evidence* for dbt results and the S3 emulator log. Reproduce locally with the same environment variables (see `tests/e2e/test_pipeline_e2e.py`).
 **"No secrets committed" fails** -> `.env` is tracked or `.env.example` holds a real-looking secret. Remove it, **rotate the secret**, and remember Git history keeps the old value.
+
+**`test_committed_sample_data_matches_the_generator` fails, but only on some machines**
+-> Python 3.13+ produces different Faker output than 3.11/3.12 even with the same seed - a real cross-version reproducibility gap in Python's own random number generator, not a bug in this project's code.
+-> generate `data/sample/` using Python 3.11 or 3.12 specifically: `py -3.12 scripts\seed_mock_sources.py --seed 42 --out-dir data\sample` (Windows) or `python3.12 scripts/seed_mock_sources.py --seed 42 --out-dir data/sample` (Mac/Linux). Verify with `pip show Faker` that it is pinned to 26.0.0 as well - both the interpreter version and the Faker version must match for byte-identical output.
+

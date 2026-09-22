@@ -56,7 +56,7 @@ More detail: [`docs/architecture.md`](docs/architecture.md).
 
 ## Quick start
 
-Requirements: Docker Desktop (with WSL2 on Windows), Git, Python 3.11+. On Windows
+Requirements: Docker Desktop (with WSL2 on Windows), Git, Python 3.11 or 3.12 . On Windows
 run the `make` commands from a WSL terminal, or use the plain commands shown
 next to each step.
 
