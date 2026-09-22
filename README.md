@@ -56,9 +56,12 @@ More detail: [`docs/architecture.md`](docs/architecture.md).
 
 ## Quick start
 
-Requirements: Docker Desktop (with WSL2 on Windows), Git, Python 3.11 or 3.12 . On Windows
-run the `make` commands from a WSL terminal, or use the plain commands shown
-next to each step.
+Requirements: Docker Desktop (with WSL2 on Windows), Git, Python 3.11 or 3.12. On
+Windows run the `make` commands from a WSL terminal, or use the plain commands
+shown next to each step. Faker (used by the mock data generator) produces
+different output on Windows than on Linux, even with the same seed - see
+"Configuration" and `docs/TROUBLESHOOTING.md`. Regenerate `data/sample/` on
+Linux/WSL/Docker only; the committed files are already correct.
 
 ```bash
 git clone https://github.com/Ravindi373/smart-retail-data-platform.git
@@ -135,7 +138,7 @@ tier. Screenshots are in [`evidence/`](evidence/).
 ```bash
 pip install -r requirements-dev.txt
 make lint     # ruff
-make test     # 92 unit tests, no Docker needed
+make test     # unit tests, no Docker needed
 make e2e      # real DAGs + dbt against Postgres (needs the services; see tests/e2e)
 ```
 
@@ -158,7 +161,7 @@ docker/               docker-compose.yml, Postgres init SQL, dbt profile, Supers
 tests/                unit/, dags/, e2e/
 docs/                 architecture, ERD, sources, data quality, troubleshooting, demo, defence prep
 setup-notes/          week-by-week build notes
-evidence/             dated screenshots per week
+evidence/              dated screenshots per week
 ```
 
 ## Configuration
@@ -182,7 +185,7 @@ Record the versions you actually ran before submitting (unpinned images move):
 
 | Component | Version | How to check |
 |---|---|---|
-| Python (host) | 3.11+ | `python --version` |
+| Python (host) | 3.11 or 3.12 | `python --version` |
 | Docker Compose | *fill in* | `docker compose version` |
 | PostgreSQL | 16 | `docker exec retaillake-postgres postgres --version` |
 | Apache Airflow | 2.9.3 (pinned) | `docker exec retaillake-airflow-scheduler airflow version` |
@@ -199,6 +202,7 @@ Record the versions you actually ran before submitting (unpinned images move):
 * **dbt runs in its own container**, triggered by `make gold`, not by Airflow, to avoid dependency conflicts with the pinned Airflow image.
 * **Sources are generated files**, not live systems. In production the landing step would call real APIs / database exports; everything after it is unchanged.
 * **Dashboard views** (`sales_flat`, `inventory_flat`) are views, not materialised tables; instant at 12k rows, would be incremental tables at scale.
+* **Faker's mock-data output is not byte-identical across operating systems** (confirmed: Windows produces different data than Linux for the same seed, Python version and Faker version). CI runs on Linux, so the committed `data/sample/` files are Linux-generated and are the source of truth - do not regenerate on Windows and commit the result.
 * **Raw PII exists in Raw and Bronze by design** (they preserve the source exactly); hashing starts in Silver, so Silver, Gold and the dashboard never hold a raw email or phone. The data is generated, not real. In production, Raw/Bronze access would be restricted or the fields encrypted.
 * **Local only.** Secrets live in `.env`; no cloud deployment.
 
@@ -208,4 +212,3 @@ Record the versions you actually ran before submitting (unpinned images move):
 [`docs/source_systems.md`](docs/source_systems.md) · [`docs/data_quality.md`](docs/data_quality.md) ·
 [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) · [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md) ·
 [`docs/DEFENCE_PREP.md`](docs/DEFENCE_PREP.md) · [`docs/CHANGES_WEEK7_8.md`](docs/CHANGES_WEEK7_8.md)
-
