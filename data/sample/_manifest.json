@@ -1,0 +1,13 @@
+{
+  "seed": 42,
+  "extract_timestamp": "2026-08-23T12:00:00",
+  "row_counts": {
+    "products": 300,
+    "customers": 1010,
+    "stores": 25,
+    "pos_sales": 5050,
+    "ecommerce_orders": 3000,
+    "inventory_snapshots": 505,
+    "supplier_deliveries": 300
+  }
+}
