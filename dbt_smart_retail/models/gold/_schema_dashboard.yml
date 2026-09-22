@@ -12,7 +12,7 @@ models:
     columns:
       - name: transaction_line_id
         description: Inherited from fact_sales_transaction.
-        tests:
+        data_tests:
           - not_null
 
   - name: inventory_flat
@@ -23,5 +23,5 @@ models:
     columns:
       - name: snapshot_id
         description: Inherited from fact_inventory_snapshot.
-        tests:
+        data_tests:
           - not_null

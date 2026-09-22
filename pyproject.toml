@@ -1,0 +1,22 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+    "dags: DAG integrity tests (need apache-airflow installed)",
+    "e2e: end-to-end pipeline tests (need Postgres, an S3 endpoint, Airflow and dbt - see tests/e2e)",
+]
+
+[tool.ruff]
+line-length = 125
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# the DAG files add the shared src/ folder to sys.path before importing it
+"dags/*.py" = ["E402"]
+"tests/*" = ["E402"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["db", "connectors", "quality"]

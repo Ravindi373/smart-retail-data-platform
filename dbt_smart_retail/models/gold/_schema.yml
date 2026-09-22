@@ -6,37 +6,47 @@ models:
     columns:
       - name: customer_key
         description: Business key (customer_id).
-        tests:
+        data_tests:
           - not_null
           - unique
+      - name: loyalty_tier
+        description: bronze / silver / gold / platinum, or 'none' when not enrolled.
+        data_tests:
+          - accepted_values:
+              values: ['bronze', 'silver', 'gold', 'platinum', 'none']
 
   - name: dim_product
     description: One row per product (reference dimension). Grain — product_key.
     columns:
       - name: product_key
         description: Business key (product_id).
-        tests:
+        data_tests:
           - not_null
           - unique
 
   - name: dim_store
     description: >
       One row per physical store/warehouse. Grain — store_key.
-      Derived from distinct store_id (pos_sales) and warehouse_id
-      (inventory_snapshots), since no dedicated store source exists.
+      Built from the store master (silver.stores); ids seen only in the
+      fact sources are kept with a NULL region so the not_null test on
+      region flags any store missing from the master.
     columns:
       - name: store_key
         description: Business key (store_id / warehouse_id — same identifier space).
-        tests:
+        data_tests:
           - not_null
           - unique
+      - name: region
+        description: Sales region from the store master (Western, Central, Southern, Northern).
+        data_tests:
+          - not_null
 
   - name: dim_date
     description: Calendar date spine (2020-2030). Grain — date_key.
     columns:
       - name: date_key
         description: Calendar date.
-        tests:
+        data_tests:
           - not_null
           - unique
 
@@ -50,7 +60,7 @@ models:
           transaction_id for POS rows; order_id + item index for
           e-commerce rows (e-commerce orders can have multiple line
           items, so order_id alone is not unique at this grain).
-        tests:
+        data_tests:
           - not_null
           - unique
       - name: customer_key
@@ -68,7 +78,7 @@ models:
           remains visible in test output and in the final report's
           "Known Limitations" section, rather than being silently
           hidden by loosening the test.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('dim_customer')
@@ -76,7 +86,7 @@ models:
               config:
                 severity: warn
       - name: product_key
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('dim_product')
@@ -87,12 +97,12 @@ models:
           store, so this is a legitimate NULL, not missing data.
           dbt's relationships test only evaluates non-null values, so
           it does not fail on these rows.
-        tests:
+        data_tests:
           - relationships:
               to: ref('dim_store')
               field: store_key
       - name: date_key
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('dim_date')
@@ -106,23 +116,23 @@ models:
     columns:
       - name: snapshot_id
         description: Synthetic key — product_key + store_key + date_key.
-        tests:
+        data_tests:
           - not_null
           - unique
       - name: product_key
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('dim_product')
               field: product_key
       - name: store_key
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('dim_store')
               field: store_key
       - name: date_key
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('dim_date')
@@ -134,8 +144,22 @@ models:
       quality.quarantine — powers the Week 6 data quality dashboard tile.
     columns:
       - name: source_name
-        tests:
+        data_tests:
           - not_null
       - name: failed_rule
-        tests:
+        data_tests:
+          - not_null
+
+  - name: quality_scorecard
+    description: >
+      One row per source system from the latest Silver run: rows in, clean,
+      quarantined and the pass rate. Grain — source_name. Powers the
+      pass-rate view on the data quality dashboard.
+    columns:
+      - name: source_name
+        data_tests:
+          - not_null
+          - unique
+      - name: rows_in
+        data_tests:
           - not_null

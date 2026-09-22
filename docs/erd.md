@@ -1,9 +1,7 @@
-# Gold layer ERD (draft — Week 1)
+# Gold layer ERD
 
-Star schema: two fact tables, four dimensions. This will be built as dbt
-models in `dbt_smart_retail/models/gold/` from Week 5 onward. Grain and
-keys below are a first draft and may change once Silver cleaning reveals
-real data shapes.
+Star schema: two fact tables, four dimensions, built as dbt models in
+`dbt_smart_retail/models/gold/`.
 
 ```mermaid
 erDiagram
@@ -17,15 +15,19 @@ erDiagram
 
   dim_customer {
     string customer_key PK
-    string customer_id_hashed
-    string loyalty_tier
+    string name
     string email_hash
+    string phone_hash
+    string loyalty_tier
+    date created_at
   }
   dim_product {
     string product_key PK
     string sku
     string product_name
     string category
+    numeric unit_cost
+    numeric unit_price
   }
   dim_store {
     string store_key PK
@@ -38,7 +40,9 @@ erDiagram
     int year
     int month
     int day
+    int quarter
     string day_of_week
+    boolean is_weekend
   }
   fact_sales_transaction {
     string transaction_line_id PK
@@ -47,8 +51,8 @@ erDiagram
     string store_key FK
     date date_key FK
     int quantity
-    decimal unit_price
-    decimal net_sales
+    numeric unit_price
+    numeric net_sales
     string channel
   }
   fact_inventory_snapshot {
@@ -64,17 +68,17 @@ erDiagram
 
 ## Grain
 
-- `fact_sales_transaction`: one row per sales line item (one product within
-  one order/transaction)
-- `fact_inventory_snapshot`: one row per product, per store/warehouse, per
-  snapshot date
+- `fact_sales_transaction`: one row per sales line item (one product within one POS transaction or online order)
+- `fact_inventory_snapshot`: one row per product, per store/warehouse, per snapshot date
 
-## Notes / decisions to confirm with mentor
+## Decisions
 
-- `channel` lives on both `dim_store` and the fact table temporarily —
-  decide in Week 5 whether channel is a store attribute or its own
-  dimension (a store can sell both in-person and online).
-- PII (`email_hash`, `customer_id_hashed`) is hashed in Silver, never
-  stored raw in Gold.
-- `is_stockout_risk` is a derived/calculated column, not a raw source
-  field — logic to be defined against `reorder_point` in Week 5.
+- `channel` is kept on the fact table (in_store / online / mobile_app) and on `dim_store` (always `in_store`): an online order has no physical store, so `store_key` is legitimately NULL for online sales.
+- PII (`email_hash`, `phone_hash`) is hashed in Silver and never stored raw in Gold.
+- `is_stockout_risk` is derived: `quantity_on_hand <= reorder_point`.
+- `net_sales` = `quantity x unit_price` (checked by a dbt test).
+- Customers without a loyalty membership are labelled `none` in `dim_customer`. A sale whose customer is missing from the dimension is labelled `unknown` in `sales_flat` (see Known limitations in the README).
+
+## Extra Gold tables (not part of the star)
+
+`quality_summary` (quarantine counts per source and rule), `quality_scorecard` (pass rate per source), and the dashboard views `sales_flat` / `inventory_flat`.

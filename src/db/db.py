@@ -10,14 +10,18 @@ added or whether the Postgres volume was created before or after it.
 """
 
 import os
+
 import psycopg2
 
 
 def get_conn():
+    """Connection settings come from the environment (see .env.example).
+    The defaults match the Docker Compose network, so nothing changes for
+    the Airflow containers; CI and local runs override POSTGRES_HOST."""
     return psycopg2.connect(
-        host="postgres",
-        port=5432,
-        dbname="retaildb",
+        host=os.environ.get("POSTGRES_HOST", "postgres"),
+        port=int(os.environ.get("POSTGRES_PORT", "5432")),
+        dbname=os.environ.get("POSTGRES_DB", "retaildb"),
         user=os.environ["POSTGRES_USER"],
         password=os.environ["POSTGRES_PASSWORD"],
     )
@@ -76,6 +80,14 @@ CREATE TABLE IF NOT EXISTS bronze.ecommerce_orders (
     raw_timestamp   TEXT,
     channel         TEXT,
     status          TEXT,
+    _source_file    TEXT,
+    _ingested_at    TIMESTAMP,
+    _run_date       DATE
+);
+CREATE TABLE IF NOT EXISTS bronze.stores (
+    store_id        TEXT,
+    region          TEXT,
+    channel         TEXT,
     _source_file    TEXT,
     _ingested_at    TIMESTAMP,
     _run_date       DATE
@@ -142,6 +154,12 @@ CREATE TABLE IF NOT EXISTS silver.ecommerce_orders (
     status           TEXT,
     _cleaned_at      TIMESTAMP
 );
+CREATE TABLE IF NOT EXISTS silver.stores (
+    store_id        TEXT PRIMARY KEY,
+    region          TEXT,
+    channel         TEXT,
+    _cleaned_at     TIMESTAMP
+);
 CREATE TABLE IF NOT EXISTS silver.supplier_deliveries (
     po_id           TEXT PRIMARY KEY,
     supplier_id     TEXT,
@@ -155,12 +173,46 @@ CREATE TABLE IF NOT EXISTS silver.supplier_deliveries (
 """
 
 
+QUALITY_DDL = """
+CREATE SCHEMA IF NOT EXISTS quality;
+CREATE TABLE IF NOT EXISTS quality.quarantine (
+    quarantine_id   SERIAL PRIMARY KEY,
+    source_name     TEXT NOT NULL,
+    record_json     JSONB NOT NULL,
+    failed_rule     TEXT NOT NULL,
+    quarantined_at  TIMESTAMP NOT NULL DEFAULT now()
+);
+-- One row per source per Silver run: how many rows came in, how many were
+-- clean, how many were quarantined. Gives the dashboard a pass rate, not
+-- just a list of failures.
+CREATE TABLE IF NOT EXISTS quality.run_summary (
+    source_name         TEXT PRIMARY KEY,
+    rows_in             INTEGER NOT NULL,
+    rows_clean          INTEGER NOT NULL,
+    rows_quarantined    INTEGER NOT NULL,
+    run_at              TIMESTAMP NOT NULL DEFAULT now()
+);
+"""
+
+
 def ensure_tables():
     conn = get_conn()
     try:
         with conn.cursor() as cur:
+            cur.execute("CREATE SCHEMA IF NOT EXISTS bronze; CREATE SCHEMA IF NOT EXISTS silver;")
+            cur.execute(QUALITY_DDL)
             cur.execute(BRONZE_DDL)
             cur.execute(SILVER_DDL)
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS bronze.ingestion_audit_log (
+                    audit_id    SERIAL PRIMARY KEY,
+                    source_name TEXT NOT NULL,
+                    file_path   TEXT NOT NULL,
+                    row_count   INTEGER NOT NULL,
+                    loaded_at   TIMESTAMP NOT NULL DEFAULT now(),
+                    run_date    DATE NOT NULL
+                );
+            """)
         conn.commit()
     finally:
         conn.close()
