@@ -92,6 +92,8 @@ jobs:
           .moto-venv/bin/pip install -q "moto[server]"
           nohup .moto-venv/bin/moto_server -p 5000 > moto.log 2>&1 &
           for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:5000 && break; sleep 1; done
+      - name: Initialize Airflow's metadata database
+        run: airflow db migrate
       - name: DAG integrity + end-to-end pipeline tests
         run: pytest tests/dags tests/e2e -v
       - name: Keep dbt results and logs

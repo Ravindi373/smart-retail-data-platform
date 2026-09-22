@@ -90,7 +90,9 @@ def pipeline(manifest):
     with connect() as conn, conn.cursor() as cur:
         for schema in ("bronze", "silver", "gold", "quality"):
             cur.execute(f"DROP SCHEMA IF EXISTS {schema} CASCADE")
-    s3, _ = raw_object_count()
+    s3 = boto3.client(
+        "s3", endpoint_url=os.environ["MINIO_ENDPOINT"], region_name="us-east-1",
+        aws_access_key_id=os.environ["MINIO_ROOT_USER"], aws_secret_access_key=os.environ["MINIO_ROOT_PASSWORD"])
     try:
         s3.create_bucket(Bucket="retail-raw")
     except s3.exceptions.BucketAlreadyOwnedByYou:
