@@ -1,6 +1,6 @@
 # Architecture
 
-## Flow
+## Flow 
 
 Sources -> Raw (MinIO) -> Bronze (typed) -> Silver (clean) -> Gold (star schema) -> Superset dashboard
 
