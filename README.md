@@ -209,4 +209,4 @@ Record the versions you actually ran before submitting (unpinned images move):
 ## Documentation
 
 [`docs/architecture.md`](docs/architecture.md) · [`docs/erd.md`](docs/erd.md) ·
-[`docs/source_systems.md`](docs/source_systems.md) · [`docs/data_quality.md`](docs/data_quality.md) ·
+[`docs/source_systems.md`](docs/source_systems.md) · [`docs/data_quality.md`](docs/data_quality.md) 
