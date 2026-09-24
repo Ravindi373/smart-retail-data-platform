@@ -1,6 +1,4 @@
-# Everything needed to lint and unit-test the project outside Docker.
-# (Airflow and dbt are only needed for the DAG / e2e tests - see the CI
-# workflow for how those jobs install them.)
+
 Faker==26.0.0
 boto3>=1.34
 moto[s3]>=5.0
