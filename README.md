@@ -210,5 +210,3 @@ Record the versions you actually ran before submitting (unpinned images move):
 
 [`docs/architecture.md`](docs/architecture.md) · [`docs/erd.md`](docs/erd.md) ·
 [`docs/source_systems.md`](docs/source_systems.md) · [`docs/data_quality.md`](docs/data_quality.md) ·
-[`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) · [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md) ·
-[`docs/DEFENCE_PREP.md`](docs/DEFENCE_PREP.md) · [`docs/CHANGES_WEEK7_8.md`](docs/CHANGES_WEEK7_8.md)
