@@ -20,3 +20,4 @@ select = ["E", "F", "W", "I", "B"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["db", "connectors", "quality"]
+
