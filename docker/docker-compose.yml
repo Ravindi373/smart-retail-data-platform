@@ -14,7 +14,7 @@ x-airflow-common: &airflow-common
     POSTGRES_USER: ${POSTGRES_USER}
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     PII_HASH_SALT: ${PII_HASH_SALT:-}
-    _PIP_ADDITIONAL_REQUIREMENTS: "boto3"
+    _PIP_ADDITIONAL_REQUIREMENTS: "boto3 pyarrow"
     AIRFLOW__WEBSERVER__WEB_SERVER_MASTER_TIMEOUT: "300"
     AIRFLOW__FAB__UPDATE_FAB_PERMS: "false"
     AIRFLOW__WEBSERVER__SECRET_KEY: "a9e6890f493075df8460a3e2674906fb"
@@ -140,7 +140,8 @@ services:
     <<: *airflow-common
     container_name: retaillake-airflow-webserver
     entrypoint: /bin/bash
-    command: ["-c", "gunicorn --bind 0.0.0.0:8080 --workers 4 --timeout 120 'airflow.www.app:cached_app()' --worker-tmp-dir /dev/shm"]
+    command: ["-c", "gunicorn --bind 0.0.0.0:8080 --workers 2 --timeout 120 --worker-tmp-dir /dev/shm 'airflow.www.app:cached_app()'"]
+    shm_size: "256mb"
     ports:
       - "8080:8080"
     depends_on:
