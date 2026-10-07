@@ -133,6 +133,29 @@ products by net sales, stockout / low-stock table, data quality summary; filters
 for date range, sales channel, store / region, product category and loyalty
 tier. Screenshots are in [`evidence/`](evidence/).
 
+### Public dashboard (Streamlit)
+
+Superset needs the whole Docker stack, so there is also a lightweight public copy
+of the same dashboard: **[live demo](https://retaillake.streamlit.app)** (link set
+when deployed). It is a Streamlit app (`dashboard/streamlit_app.py`) that reads a
+Parquet snapshot of the four dashboard-facing Gold tables (`sales_flat`,
+`inventory_flat`, `quality_summary`, `quality_scorecard`), so it keeps the rule
+that the dashboard reads only Gold. Same charts and the same five filters.
+
+```bash
+make export-gold                                   # Gold -> dashboard/data/*.parquet (stack must be up)
+pip install -r dashboard/requirements.txt
+streamlit run dashboard/streamlit_app.py           # http://localhost:8501
+```
+
+To refresh the public dashboard: run the pipeline, `make export-gold`, commit
+`dashboard/data/`, push. Streamlit Community Cloud redeploys on every push.
+
+Deploying it (one time): sign in at [share.streamlit.io](https://share.streamlit.io)
+with GitHub → **Create app** → repo `Ravindi373/smart-retail-data-platform`,
+branch `main`, main file `dashboard/streamlit_app.py` → optionally set a custom
+subdomain → **Deploy**.
+
 ## Testing and CI
 
 ```bash
@@ -155,9 +178,10 @@ src/connectors/       storage.py  - idempotent, immutable raw landing (MinIO/S3)
 src/db/               db.py       - connection + idempotent DDL
 src/quality/          rules.py    - validation / cleaning helpers (pure, unit-tested)
 dbt_smart_retail/     Gold models, schema tests, singular tests
-scripts/              seed_mock_sources.py - repeatable mock data generator
+scripts/              seed_mock_sources.py - repeatable mock data generator; export_gold.py - Gold -> Parquet
 data/sample/          generated source files + _manifest.json (committed for reviewers)
 docker/               docker-compose.yml, Postgres init SQL, dbt profile, Superset config
+dashboard/            public Streamlit dashboard + Parquet snapshot of Gold (dashboard/data/)
 tests/                unit/, dags/, e2e/
 docs/                 architecture, ERD, sources, data quality, troubleshooting, demo, defence prep
 setup-notes/          week-by-week build notes
