@@ -2,6 +2,8 @@
 
 ![CI](https://github.com/Ravindi373/smart-retail-data-platform/actions/workflows/ci.yml/badge.svg)
 
+Live Dashboard : https://smart-retail-data-platform.streamlit.app/
+
 Turns messy, scattered retail data (POS, e-commerce, warehouse, CRM, suppliers)
 into clean, trusted, dashboard-ready tables using a medallion architecture.
 Runs entirely on one laptop with Docker Compose. Built as the CCA Data Engineer
