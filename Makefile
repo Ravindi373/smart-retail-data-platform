@@ -8,7 +8,7 @@ AIRFLOW_EXEC = docker exec retaillake-airflow-scheduler airflow
 PSQL   = docker exec -i retaillake-postgres psql -U $${POSTGRES_USER:-retaillake} -d retaildb
 
 .DEFAULT_GOAL := help
-.PHONY: help up down seed unpause bronze silver gold pipeline demo quality test lint e2e clean
+.PHONY: help up down seed unpause bronze silver gold pipeline demo quality export-gold dashboard test lint e2e clean
 
 help:  ## List the available commands
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  make %-10s %s\n", $$1, $$2}'
@@ -45,6 +45,12 @@ quality:  ## Show the data-quality scorecard and why rows were quarantined
 	@$(PSQL) -c "SELECT source_name, rows_in, rows_clean, rows_quarantined, pass_rate_pct FROM gold.quality_scorecard ORDER BY 1;"
 	@echo "--- quarantine reasons ---"
 	@$(PSQL) -c "SELECT source_name, failed_rule, quarantined_count FROM gold.quality_summary ORDER BY 1, 3 DESC;"
+
+export-gold:  ## Snapshot the dashboard Gold tables to dashboard/data/*.parquet for the Streamlit app
+	POSTGRES_HOST=localhost POSTGRES_PORT=25432 python scripts/export_gold.py
+
+dashboard:  ## Run the public Streamlit dashboard locally (pip install -r dashboard/requirements.txt)
+	streamlit run dashboard/streamlit_app.py
 
 test:  ## Fast unit tests (no Docker needed): pip install -r requirements-dev.txt
 	python -m pytest tests/unit -q
